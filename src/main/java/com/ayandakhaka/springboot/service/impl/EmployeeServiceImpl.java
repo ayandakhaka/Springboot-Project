@@ -2,11 +2,14 @@ package com.ayandakhaka.springboot.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.ayandakhaka.springboot.dto.EmployeeDto;
 import com.ayandakhaka.springboot.exception.ResourceNotFoundException;
+import com.ayandakhaka.springboot.mapper.EmployeeMapper;
 import com.ayandakhaka.springboot.model.Employee;
 import com.ayandakhaka.springboot.repository.EmployeeRepository;
 import com.ayandakhaka.springboot.service.EmployeeService;
@@ -24,9 +27,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
 	@Override
-	public Employee saveEmployee(Employee employee) {
+	public EmployeeDto createEmployee(EmployeeDto employeeDto) {
 		
-		return employeeRepository.save(employee);
+		Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
+		Employee saveEmployee = employeeRepository.save(employee);
+		return EmployeeMapper.mapToEmployeeDto(saveEmployee);
+	}
+	
+	@Override
+	public EmployeeDto updateEmployee(EmployeeDto employeeDto, long id) {
+		
+		Employee employee = employeeRepository.findById(id).orElseThrow(() -> 
+		new ResourceNotFoundException("Employee", "Id", id));
+		
+		employee.setFirstName(employeeDto.getFirstName());
+		employee.setLastName(employeeDto.getLastName());
+		employee.setEmail(employeeDto.getEmail());
+		
+		Employee updatedEmployeeObj = employeeRepository.save(employee);
+		return EmployeeMapper.mapToEmployeeDto(updatedEmployeeObj);
 	}
 	
 	@Override
@@ -34,45 +53,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 		
 		employeeRepository.findById(id).orElseThrow(() -> 
 		new ResourceNotFoundException("Employee", "Id", id));
-		
-//		if(!employeeRepository.existsById(id)) {
-//			throw new ResourceNotFoundException("Employee", "Id", id);
-//		}
 		employeeRepository.deleteById(id);
 	}
 	
 	@Override
-	public Employee updateEmployee(Employee updatedEmployee, long id) {
+	public EmployeeDto getSingleEmployeeById(long employeeId) {
+	 // Using lamda expression
+		Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> 
+		new ResourceNotFoundException("Employee", "Id", employeeId));
 		
-		Employee employee = employeeRepository.findById(id).orElseThrow(() -> 
-		new ResourceNotFoundException("Employee", "Id", id));
-		
-		employee.setFirstName(updatedEmployee.getFirstName());
-		employee.setLastName(updatedEmployee.getLastName());
-		employee.setEmail(updatedEmployee.getEmail());
-		
-		return employeeRepository.save(employee);
+		return EmployeeMapper.mapToEmployeeDto(employee);
+				
 	}
 	
 	@Override
-	public List<Employee> getAllEmployees() {
-		return employeeRepository.findAll();
-	}
-
-
-	@Override
-	public Employee getSingleEmployee(long id) {
+	public List<EmployeeDto> getAllEmployees() {
 		
-//		Optional<Employee> employee = employeeRepository.findById(id);
-//		if(employee.isPresent()) {
-//			return employee.get();
-//		} else {
-//			throw new ResourceNotFoundException("Employee", "Id", id);
-//		}
-//	}
-	 // Using lamda expression
-		return employeeRepository.findById(id).orElseThrow(() -> 
-		new ResourceNotFoundException("Employee", "Id", id));
-				
+		List<Employee> employees = employeeRepository.findAll();
+		return employees.stream().map((employee) -> 
+		EmployeeMapper.mapToEmployeeDto(employee)).collect(Collectors.toList());
+		//return EmployeeMapper.mapToEmployeeDto(employees);
+		//return employeeRepository.findAll();
 	}
 }

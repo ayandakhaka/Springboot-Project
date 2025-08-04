@@ -2,13 +2,13 @@ package com.ayandakhaka.springboot.service;
 
 import java.util.List;
 
-import com.ayandakhaka.springboot.model.Employee;
+import com.ayandakhaka.springboot.dto.EmployeeDto;
 
 public interface EmployeeService {
 
-	Employee saveEmployee(Employee employee); 
-	List<Employee> getAllEmployees();
-	Employee getSingleEmployee(long id);
-	Employee updateEmployee(Employee employee, long id);
+	EmployeeDto createEmployee(EmployeeDto employeeDto); 
+	List<EmployeeDto> getAllEmployees();
+	EmployeeDto getSingleEmployeeById(long id);
+	EmployeeDto updateEmployee(EmployeeDto employeeDto, long id);
 	void deleteEmployee(long id);
 }

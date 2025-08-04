@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ayandakhaka.springboot.dto.EmployeeDto;
 import com.ayandakhaka.springboot.model.Employee;
 import com.ayandakhaka.springboot.service.EmployeeService;
+
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -23,36 +26,36 @@ public class EmployeeController {
 	private EmployeeService employeeService;
 
 	public EmployeeController(EmployeeService employeeService) {
-		super();
 		this.employeeService = employeeService;
 	}
 	
 	// Build create employee REST API
-	@PostMapping
-	public ResponseEntity<Employee> saveEmployee(@RequestBody Employee employee) {
+	@PostMapping()
+	public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
 		
-		return new ResponseEntity<Employee>(employeeService.saveEmployee(employee),
-				HttpStatus.CREATED);
+		EmployeeDto createdEmployee = employeeService.createEmployee(employeeDto);
+		return new ResponseEntity<>(createdEmployee, HttpStatus.CREATED);
 	}
 	
 	// Build get all employees REST API
-	@GetMapping
-	public List<Employee> getAllEmployees() {
-		
-		return employeeService.getAllEmployees();
+	@GetMapping()
+	public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
+		List<EmployeeDto> employees = employeeService.getAllEmployees();
+		return ResponseEntity.ok(employees);
 	}
 	
 	// Build get single employee REST API
 	@GetMapping("{id}")
-	public ResponseEntity<Employee> getSingleEmployeeById(@PathVariable("id") long employeeId) {
-		return new ResponseEntity<Employee>(employeeService.getSingleEmployee(employeeId)
-				, HttpStatus.OK);
+	public ResponseEntity<EmployeeDto> getSingleEmployeeById(@PathVariable("id") long employeeId) {
+		
+		EmployeeDto employeeDto = employeeService.getSingleEmployeeById(employeeId);
+		return ResponseEntity.ok(employeeDto);
 	}
 	
 	// Build update employee REST API
 	@PutMapping("{id}")
-	public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee, @PathVariable("id") long employeeId) {
-		return new ResponseEntity<Employee>(employeeService.updateEmployee(employee, employeeId),
+	public ResponseEntity<EmployeeDto> updateEmployeeDetails(@RequestBody EmployeeDto employee, @PathVariable("id") long employeeId) {
+		return new ResponseEntity<EmployeeDto>(employeeService.updateEmployee(employee, employeeId),
 				HttpStatus.OK);
 	}
 	
