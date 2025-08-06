@@ -26,11 +26,5 @@ public class EmployeeMapper {
 				employeeDto.getEmail()
 		);
 	}
-	
-	public static List<EmployeeDto> mapToEmployeeDto(List<Employee> employees) {
-        return employees.stream()
-                .map(EmployeeMapper::mapToEmployeeDto)
-                .collect(Collectors.toList());
-    }
 
 }

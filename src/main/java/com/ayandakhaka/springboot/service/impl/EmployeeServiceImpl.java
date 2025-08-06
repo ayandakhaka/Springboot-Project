@@ -1,10 +1,8 @@
 package com.ayandakhaka.springboot.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.ayandakhaka.springboot.dto.EmployeeDto;
@@ -18,6 +16,7 @@ import com.ayandakhaka.springboot.service.EmployeeService;
 public class EmployeeServiceImpl implements EmployeeService {
 
 	private EmployeeRepository employeeRepository;
+
 	
 	
 	public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
@@ -25,13 +24,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		this.employeeRepository = employeeRepository;
 	}
 
-
 	@Override
 	public EmployeeDto createEmployee(EmployeeDto employeeDto) {
 		
 		Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
 		Employee saveEmployee = employeeRepository.save(employee);
 		return EmployeeMapper.mapToEmployeeDto(saveEmployee);
+	
 	}
 	
 	@Override
@@ -72,7 +71,5 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<Employee> employees = employeeRepository.findAll();
 		return employees.stream().map((employee) -> 
 		EmployeeMapper.mapToEmployeeDto(employee)).collect(Collectors.toList());
-		//return EmployeeMapper.mapToEmployeeDto(employees);
-		//return employeeRepository.findAll();
 	}
 }
