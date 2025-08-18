@@ -1,11 +1,13 @@
 package com.ayandakhaka.springboot.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.ayandakhaka.springboot.dto.EmployeeDto;
+import com.ayandakhaka.springboot.exception.EmployeeNotFoundException;
 import com.ayandakhaka.springboot.exception.ResourceNotFoundException;
 import com.ayandakhaka.springboot.mapper.EmployeeMapper;
 import com.ayandakhaka.springboot.model.Employee;
@@ -34,7 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 	
 	@Override
-	public EmployeeDto updateEmployee(EmployeeDto employeeDto, long id) {
+	public EmployeeDto updateEmployee(long id ,EmployeeDto employeeDto) {
 		
 		Employee employee = employeeRepository.findById(id).orElseThrow(() -> 
 		new ResourceNotFoundException("Employee", "Id", id));
@@ -49,10 +51,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Override
 	public void deleteEmployee(long id) {
-		
-		employeeRepository.findById(id).orElseThrow(() -> 
-		new ResourceNotFoundException("Employee", "Id", id));
-		employeeRepository.deleteById(id);
+//	    Optional<Employee> employee = employeeRepository.findById(id);
+//	    if (employee.isEmpty()) {
+//	        throw new EmployeeNotFoundException("Employee with id " + id + " not found");
+//	    }
+//	    employeeRepository.deleteById(id);
+		Employee employee = employeeRepository.findById(id)
+			        .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
+	
+	    employeeRepository.delete(employee);
 	}
 	
 	@Override

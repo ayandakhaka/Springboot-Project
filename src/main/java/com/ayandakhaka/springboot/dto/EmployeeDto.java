@@ -2,17 +2,23 @@ package com.ayandakhaka.springboot.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class EmployeeDto {
 
 	private Long id;
+	
 	@NotBlank(message = "First name is required")
+    @Size(min = 2, max = 50, message = "First name must be between 2 and 50 characters")
 	private String firstName;
+    
 	@NotBlank(message = "Last name is required")
 	private String lastName;
-	@Email(message = "Email is required")
+	
+	@NotBlank(message = "Email is required")
+    @Email(message = "Email must be valid")
 	private String email;
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 	
@@ -28,9 +34,10 @@ public class EmployeeDto {
 	}
 
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getFirstName() {
 		return firstName;
 	}
