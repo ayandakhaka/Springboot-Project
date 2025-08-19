@@ -1,10 +1,8 @@
 package com.ayandakhaka.springboot.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -81,7 +79,8 @@ public class EmployeeServiceTest {
 	 *  
 	 */
 	@Test
-	public void testCreateEmployee_ShouldReturn400BadRequest() throws Exception {
+	public void 
+	testCreateEmployee_ShouldReturn400BadRequest_WhenRequestIsInvalid() throws Exception {
 
 		EmployeeDto invalidEmployee = new EmployeeDto();
 
@@ -371,10 +370,6 @@ public class EmployeeServiceTest {
 		Long employeeId = 1L;
 		String requestURI = END_POINT + "/" + employeeId;
 
-		//Mockito.doThrow(new ResponseStatusException(HttpStatus.NO_CONTENT))
-		//.when(employeeService)
-		//.deleteEmployee(employeeId);
-
 		doNothing().when(employeeService).deleteEmployee(employeeId);
 
 		mockMvc.perform(delete(requestURI, employeeId).contentType("application/json"))
@@ -382,10 +377,4 @@ public class EmployeeServiceTest {
 		.andDo(print());
 
 	}
-
-	//
-
-	//
-	//
-
 }
